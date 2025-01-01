@@ -1,3 +1,8 @@
+fetch('/spine').then(async (resp) => {
+    var book = new Book(await resp.json())
+    book.loadPage(0);
+});
+
 class Book {
     constructor(spine) {
         this.spine = spine;
@@ -19,7 +24,7 @@ class Book {
     loadPage(pageNumber) {
         this.pageNumber = pageNumber;
         document.getElementById("pageNumber").value=this.pageNumber;
-        fetch('/public/OEBPS/' + this.spine[this.pageNumber]).then(async (resp) => {
+        fetch("/book/" + this.spine[this.pageNumber]).then(async (resp) => {
             var text = await resp.text();
             var doc = XMLParse(text);
             document.getElementById("readingArea").replaceChildren(doc.body);
@@ -40,11 +45,6 @@ class Book {
         this.loadPage(this.pageNumber + 1);
     }
 }
-
-fetch('/spine').then(async (resp) => {
-    var book = new Book(await resp.json())
-    book.loadPage(0);
-})
 
 function XMLParse(xmlStr) {
     const parser = new DOMParser();
