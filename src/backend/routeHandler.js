@@ -8,9 +8,6 @@ const UFR = require("./routes/uploadFileRoute.js");
 function httpHandler(req, res) {
 
     console.log("Request: \"" + req.url + "\", type \"" + req.method + "\"");
-    const parsedUrl = url.parse(req.url);
-    const sanitizePath = path.normalize(parsedUrl.pathname).replace(/^(\.\.[\/\\])+/, '');
-    let pathname = path.join(__dirname, sanitizePath);
     var reqUrl = req.url;
     var reqMethod = req.method.toLowerCase();
     switch(true) {
@@ -26,20 +23,20 @@ function httpHandler(req, res) {
         case (reqUrl === "/path"):
             RIR.pathRoute(req, res);
             break;
-        case (reqUrl === "/path"):
-            RIR.pathRoute(req, res);
-            break;
         case (reqUrl === "/spine"):
             RIR.spineRoute(req, res);
             break;
         case (reqUrl.startsWith("/reader")):
-            OR.readerRoute(req, res, sanitizePath);
+            OR.readerRoute(req, res, reqUrl);
+            break;
+        case (reqUrl.startsWith("/book/page/")):
+            RIR.pageRoute(req, res, reqUrl);
             break;
         case (reqUrl.startsWith("/book/")):
-            RIR.contentRoute(req, res, sanitizePath);
+            RIR.contentRoute(req, res, reqUrl);
             break;
         default:
-            RIR.contentRoute(req, res, sanitizePath);
+            RIR.contentRoute(req, res, reqUrl);
             break;
     }
 }

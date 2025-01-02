@@ -3,6 +3,9 @@ const jsdom = require("jsdom");
 const fs = require('fs');
 const path = require('path');
 
+const mimeType = require("./mimeType.js");
+const BookViewer = require("../components/bookViewer.js");
+
 function unzip(filePath, outPath) {
     if (!fs.existsSync(outPath)) {
         fs.mkdirSync(outPath);
@@ -11,15 +14,54 @@ function unzip(filePath, outPath) {
     zip.extractAllTo(outPath);
 }
 
-function loadZip(file) {
+function items(file) {
     var spine = []
     var items = XMLParse(file).getElementsByTagName("item");
-    console.log("Items: " + items);
     for (var item of items) {
-        var page = item.attributes.href.nodeValue;
-        spine.push(page);
+        const idRef = {
+            id: item.getAttribute("id"),
+            href: item.getAttribute("href")
+        };
+        spine.push(idRef);
     }
     return spine;
+}
+
+function itemrefs(file) {
+    var spine = []
+    var items = XMLParse(file).getElementsByTagName("itemref");
+    for (var itemref of items) {
+        spine.push(itemref.getAttribute("idref"));
+    }
+    return spine;
+}
+
+function getItem(idRef) {
+    var pathname = "-1";
+    for (var item of BookViewer.book.spine) {
+        if (item.id === idRef) {
+            pathname = path.join(__dirname, '..', 'book', BookViewer.book.folder, item.href);
+        }
+    }
+
+    if (pathname === "-1") {
+        const result = {
+            err: true,
+            data: 0,
+            mimeType: '-1'
+        };
+        return result;
+    }
+
+    fileData = fs.readFileSync(pathname);
+    const ext = path.parse(pathname).ext;
+    const result = {
+        err: false,
+        data: fileData,
+        mimeType: mimeType[ext] || 'text/plain'
+    };
+
+    return result;
 }
 
 function opfPath(bookPath) {
@@ -48,7 +90,9 @@ function XMLParse(xmlStr) {
 }
 
 exports.unzip = unzip;
-exports.loadZip = loadZip;
+exports.getItem = getItem;
+exports.items = items;
+exports.itemrefs = itemrefs;
 exports.opfPath = opfPath;
 exports.contentFolderPath = contentFolderPath;
 exports.XMLParse = XMLParse;

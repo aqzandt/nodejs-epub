@@ -46,11 +46,14 @@ function uploadFile(req, res) {
             var opf = utils.opfPath(folderPath);
             var content = utils.contentFolderPath(folderPath);
             var spineXML = fs.readFileSync(path.join(folderPath, opf));
-            var spine = utils.loadZip(spineXML);
+            var spine = utils.items(spineXML);
+            var refs = utils.itemrefs(spineXML);
             console.log(spine);
+            console.log(refs);
             BookViewer.book.opf = opf;
             BookViewer.book.folder = content;
             BookViewer.book.spine = spine;
+            BookViewer.book.itemrefs = refs;
 
             //Redirect to Reader
             res.statusCode = 302;

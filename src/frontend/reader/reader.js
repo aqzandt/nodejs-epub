@@ -24,7 +24,8 @@ class Book {
     loadPage(pageNumber) {
         this.pageNumber = pageNumber;
         document.getElementById("pageNumber").value=this.pageNumber;
-        fetch("/book/" + this.spine[this.pageNumber]).then(async (resp) => {
+        var ref = this.spine[this.pageNumber];
+        fetch("/book/page/" + ref).then(async (resp) => {
             var text = await resp.text();
             var doc = XMLParse(text);
             document.getElementById("readingArea").replaceChildren(doc.body);
