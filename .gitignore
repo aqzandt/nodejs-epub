@@ -1,0 +1,4 @@
+node_modules/
+.vscode/
+src/backend/book/**
+src/backend/settings/**
