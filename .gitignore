@@ -1,4 +1,6 @@
 node_modules/
 .vscode/
-src/backend/book/**
-src/backend/settings/**
+public/book/**
+src/settings/**
+saved_data.txt
+settings.txt

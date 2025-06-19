@@ -4,7 +4,7 @@ const path = require('path');
 const mimeType = require("../utils/mimeType.js");
 
 function originRoute(req, res) {
-    const html = fs.readFileSync(path.join(__dirname, '..', '..', 'frontend', 'index.html'));
+    const html = fs.readFileSync(path.join(__dirname, '..', '..', 'public', 'index', 'index.html'));
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write(html);
     res.end();
@@ -12,7 +12,7 @@ function originRoute(req, res) {
 }
 
 function readerRoute(req, res, sanitizePath) {
-    var pathname = path.join(__dirname, '..', '..', 'frontend', sanitizePath);
+    var pathname = path.join(__dirname, '..', '..', 'public', sanitizePath);
 
     fs.readFile(pathname, (err, data) => {
         if(err){

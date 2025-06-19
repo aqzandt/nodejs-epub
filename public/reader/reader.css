@@ -1,0 +1,25 @@
+body {
+    background-color: #181a1b;
+}
+
+#bookmarkLoadButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+#bookmarkSaveButton {
+    position: fixed;
+    top: 20px;
+    right: 140px;
+}
+
+#pageNumber {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+}
+
+* :not(.normalStyle) {
+    color: #e8e6e3;
+}
