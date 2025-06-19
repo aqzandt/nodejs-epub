@@ -1,17 +1,21 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-const mimeType = require("../utils/mimeType.js");
+import { mimeType } from "../utils/mimeType.ts";
 
-function originRoute(req, res) {
-    const html = fs.readFileSync(path.join(__dirname, '..', '..', 'public', 'index', 'index.html'));
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export function originRoute(req: any, res: any) {
+    const html = fs.readFileSync(path.join(__dirname, '..', '..', 'public', 'index.html'));
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write(html);
     res.end();
     return;
 }
 
-function readerRoute(req, res, sanitizePath) {
+export function readerRoute(req: any, res: any, sanitizePath: string) {
     var pathname = path.join(__dirname, '..', '..', 'public', sanitizePath);
 
     fs.readFile(pathname, (err, data) => {
@@ -20,17 +24,17 @@ function readerRoute(req, res, sanitizePath) {
             res.end(`Error getting the file: ${err}.`);
           } else {
             const ext = path.parse(pathname).ext;
-            res.setHeader('Content-type', mimeType[ext] || 'text/plain' );
+            res.setHeader('Content-type', mimeType.get(ext) || 'text/plain' );
             res.end(data);
           }
     });
 }
 
-function bookmarkRoute(req, res) {
+export function bookmarkRoute(req: any, res: any) {
     let body = '';
 
     // Listen for data events - each chunk is received here
-    req.on('data', (chunk) => {
+    req.on('data', (chunk: any) => {
       // Append each chunk to the body string
       body += chunk.toString();
     });
@@ -53,17 +57,11 @@ function bookmarkRoute(req, res) {
       }
     });
 
-    
 }
 
-function getBookmark(req, res) {
+export function getBookmark(req: any, res: any) {
     const json = fs.readFileSync(path.join(__dirname, '..', 'settings', 'settings.txt'));
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.write(json);
     res.end();
 }
-
-exports.originRoute = originRoute;
-exports.readerRoute = readerRoute;
-exports.bookmarkRoute = bookmarkRoute;
-exports.getBookmark = getBookmark;

@@ -1,13 +1,19 @@
-const formidable = require('formidable');
-const fs = require('fs');
-const path = require('path');
+import formidable from 'formidable';
+import fs from 'fs';
+import path from 'path';
 
-const BookViewer = require("../components/bookViewer.js");
-const utils = require("../utils/utils.js");
+import BookViewer from "../classes/BookViewer.ts";
+import * as utils from "../utils/utils.ts";
+import { BookService } from '../services/BookService.ts';
+import { Book } from '../../shared/Book.ts';
 
-function uploadFile(req, res) {
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export function uploadFile(req: any, res: any) {
     // Initialize formidable
-    var form = new formidable.IncomingForm();
+    const form = formidable({});
     form.parse(req, (err, fields, files) => {
         if (err) {
             res.writeHead(400, { 'content-type': 'text/plain' });
@@ -17,12 +23,12 @@ function uploadFile(req, res) {
         }
 
         // Access the latest file in the array
-        var uploadedFile = files.file[files.file.length-1];
+        var uploadedFile = files.file![files.file!.length-1];
         var tempFilePath = uploadedFile.filepath;
-        var originalFilename = uploadedFile.originalFilename;
+        var originalFilename = uploadedFile.originalFilename!;
 
         // Target file path
-        var folderPath = path.join(__dirname, '..', 'book')
+        var folderPath = path.join(__dirname, '..', '..', 'public', 'book')
         var zipPath = path.join(folderPath, originalFilename);
         
         fs.rmSync(folderPath, { recursive: true, force: true });
@@ -47,13 +53,13 @@ function uploadFile(req, res) {
             var content = utils.contentFolderPath(folderPath);
             var spineXML = fs.readFileSync(path.join(folderPath, opf));
             var spine = utils.items(spineXML);
-            var refs = utils.itemrefs(spineXML);
+            var itemrefs = utils.itemrefs(spineXML);
             console.log(spine);
-            console.log(refs);
-            BookViewer.book.opf = opf;
-            BookViewer.book.folder = content;
-            BookViewer.book.spine = spine;
-            BookViewer.book.itemrefs = refs;
+            console.log(itemrefs);
+            BookService.getBookViewer().book = new Book(spine)
+            BookService.getBookViewer().opf = opf;
+            BookService.getBookViewer().folder = content;
+            BookService.getBookViewer().itemrefs = itemrefs;
 
             //Redirect to Reader
             res.statusCode = 302;
@@ -62,5 +68,3 @@ function uploadFile(req, res) {
         });
     });
 }
-
-exports.uploadFile = uploadFile;

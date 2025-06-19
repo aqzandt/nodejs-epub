@@ -4,3 +4,4 @@ public/book/**
 src/settings/**
 saved_data.txt
 settings.txt
+built/
