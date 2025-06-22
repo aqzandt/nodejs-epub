@@ -22,20 +22,20 @@ export function uploadBook(req: any, res: any) {
         let uploadedFile = files.file![files.file!.length-1];
         let tempFilePath = uploadedFile.filepath;
         let originalFilename = uploadedFile.originalFilename!;
+        
+        let bookPath = path.join(__dirname, '..', '..', 'public', 'book');
+        if (!fs.existsSync(bookPath)) {
+            fs.mkdirSync(bookPath);
+        }
 
         // Target file path
         let id = crypto.randomUUID();
-
         let folderPath = path.join(__dirname, '..', '..', 'public', 'book', id);
         let zipPath = path.join(folderPath, originalFilename);
+
+        // Create upload directory
+        fs.mkdirSync(folderPath);
         
-        fs.rmSync(folderPath, { recursive: true, force: true });
-
-        // Ensure the upload directory exists
-        if (!fs.existsSync(folderPath)) {
-            fs.mkdirSync(folderPath);
-        }
-
         // Rename and move the file, then unzip it
         fs.copyFile(tempFilePath, zipPath, (err) => {
             if (err) {

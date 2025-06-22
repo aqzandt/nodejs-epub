@@ -4,5 +4,5 @@ public/book/**
 settings
 saved_data.txt
 settings.txt
-built/
+dist
 **/*.js

@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
     "target": "es2022",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16",
     "module": "Node16",
-    "allowJs": true,
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
-    "verbatimModuleSyntax": true,
     "lib": ["dom", "es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator"]
   },
-  "include": ["public/**/*.ts"],
-  "exclude": ["node_modules", "built"]
+  "include": ["**/*.ts"],
+  "exclude": ["./node_modules"]
 }

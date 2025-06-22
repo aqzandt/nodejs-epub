@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import * as utils from "../utils/utils.ts";
-import * as bookService from "../services/BookService.ts";
+import * as bookService from "../services/bookService.ts";
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
