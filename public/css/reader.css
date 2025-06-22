@@ -1,33 +1,33 @@
 body {
-    background-color: #181a1b;
+  background-color: #181a1b;
 }
 
 #readingArea {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    margin: 30px;
-    box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  margin: 30px;
+  box-sizing: border-box;
 }
 
 #bookmarkLoadButton {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
 }
 
 #bookmarkSaveButton {
-    position: fixed;
-    top: 20px;
-    right: 140px;
+  position: fixed;
+  top: 20px;
+  right: 140px;
 }
 
 #pageNumber {
-    position: fixed;
-    top: 20px;
-    left: 20px;
+  position: fixed;
+  top: 20px;
+  left: 20px;
 }
 
 * :not(.normalStyle) {
-    color: #e8e6e3;
+  color: #e8e6e3;
 }

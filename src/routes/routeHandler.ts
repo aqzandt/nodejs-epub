@@ -4,7 +4,7 @@ import * as bookRoute from "./bookRoute.ts";
 import * as uploadRoute from "./uploadRoute.ts";
 import * as bookmarkRoute from "./bookmarkRoute.ts";
 
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -44,5 +44,4 @@ export function routeHandler(app: any) {
   app.post("/upload", (req: any, res: any) => {
     uploadRoute.uploadBook(req, res);
   });
-
 }

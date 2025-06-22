@@ -1,14 +1,14 @@
 import AdmZip from "adm-zip";
 import jsdom from "jsdom";
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 import { mimeType } from "./mimeType.ts";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * 
+ *
  * @param filePath Full path to the zip file (e.g., C:/app/public/book/1234.zip)
  * @param outPath Full path to the output folder (e.g., C:/app/public/book/)
  */
@@ -21,23 +21,30 @@ export function unzip(filePath: any, outPath: any) {
 }
 
 /**
- * 
+ *
  * @param bookPath Full path to the book folder (e.g., C:/app/public/book/1234)
  * @returns Full path to the OPF file (e.g., C:/app/public/book/1234/item/content.opf)
  */
 export function getOpfPathFromBookFolderPath(bookPath: string): string {
-  let content: any = fs.readFileSync(path.join(bookPath, 'META-INF', 'container.xml'));
+  let content: any = fs.readFileSync(
+    path.join(bookPath, "META-INF", "container.xml")
+  );
   let xml = XMLParse(content);
-  let opf = path.join(bookPath, xml.getElementsByTagName("rootfile")[0].getAttribute("full-path")!);
+  let opf = path.join(
+    bookPath,
+    xml.getElementsByTagName("rootfile")[0].getAttribute("full-path")!
+  );
   return opf;
 }
 
 /**
- * 
+ *
  * @param bookPath Full path to the book folder (e.g., C:/app/public/book/1234)
  * @returns Full path to the content root folder (e.g., C:/app/public/book/1234/item)
  */
-export function getContentFolderPathFromBookFolderPath(bookPath: string): string {
+export function getContentFolderPathFromBookFolderPath(
+  bookPath: string
+): string {
   let opf = getOpfPathFromBookFolderPath(bookPath);
   let contentFolder = opf.substring(0, opf.lastIndexOf(path.sep));
 
@@ -45,7 +52,7 @@ export function getContentFolderPathFromBookFolderPath(bookPath: string): string
 }
 
 /**
- * 
+ *
  * @param xmlStr XML
  * @returns document object of the parsed XML
  */
@@ -60,7 +67,7 @@ export function XMLParse(xml: any) {
 }
 
 /**
- * 
+ *
  * @param xmlStr XML
  * @returns document object of the parsed XML
  */
@@ -74,7 +81,7 @@ export function documentToXMLString(document: Document): string {
 }
 
 /**
- * 
+ *
  * @param res response object
  * @param filePath path to file to return
  */
@@ -85,7 +92,7 @@ export function returnFile(res: any, filePath: string) {
       res.end(`Error getting the file: ${err}.`);
     } else {
       const ext = path.parse(filePath).ext;
-      res.writeHead(200, {'Content-type': mimeType.get(ext) || 'text/plain' });
+      res.writeHead(200, { "Content-type": mimeType.get(ext) || "text/plain" });
       res.end(data);
     }
   });
