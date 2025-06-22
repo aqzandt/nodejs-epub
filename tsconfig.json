@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": ".",
     "target": "es2022",
     "strict": true,
     "esModuleInterop": true,

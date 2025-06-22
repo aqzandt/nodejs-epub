@@ -1,34 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-
-import { mimeType } from "../utils/mimeType.ts";
-
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-export function originRoute(req: any, res: any) {
-    const html = fs.readFileSync(path.join(__dirname, '..', '..', 'public', 'index.html'));
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.write(html);
-    res.end();
-    return;
-}
-
-export function readerRoute(req: any, res: any, sanitizePath: string) {
-    var pathname = path.join(__dirname, '..', '..', 'public', sanitizePath);
-
-    fs.readFile(pathname, (err, data) => {
-        if(err){
-            res.statusCode = 500;
-            res.end(`Error getting the file: ${err}.`);
-          } else {
-            const ext = path.parse(pathname).ext;
-            res.setHeader('Content-type', mimeType.get(ext) || 'text/plain' );
-            res.end(data);
-          }
-    });
-}
 
 export function bookmarkRoute(req: any, res: any) {
     let body = '';

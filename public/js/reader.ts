@@ -1,31 +1,25 @@
-import { Book } from "../../shared/Book.ts";
+let bookId = window.location.pathname.split("/").pop();
+let pageNumber = 0;
 
-const book = await Book.fetchBook();
+const bookmarkSaveButton = document.getElementById("bookmarkSaveButton")!;
+const bookmarkLoadButton = document.getElementById("bookmarkLoadButton")!;
+const pageNumberInput = document.getElementById("pageNumber") as HTMLInputElement;
+bookmarkSaveButton.addEventListener("click", bookmarkPage);
+bookmarkLoadButton.addEventListener("click", loadBookmark);
+pageNumberInput.addEventListener('input', (e) => {
+  pageNumber = Number((e.target as HTMLInputElement).value);
+  loadPage(pageNumber);
+});
 
-const bookmarkLoadButton = document.getElementById("bookmarkLoadButton")
-bookmarkLoadButton!.addEventListener("click", loadBookmark);
-
-const bookmarkSaveButton = document.getElementById("bookmarkSaveButton")
-bookmarkSaveButton!.addEventListener("click", bookmarkPage);
-
-document.getElementById("pageNumber")!.setAttribute("min", "0")
-document.getElementById("pageNumber")!.setAttribute("max", (book.spine.length - 1).toString());
-
-// Hotkeys for navigation
 document.addEventListener('keydown', (e) => {
   if (e.code === "ArrowLeft") prevPage()
   if (e.code === "ArrowRight") nextPage()
 });
 
-document.getElementById("pageNumber")!.addEventListener('input', (e) => {
-  loadPage(Number((e.target as HTMLInputElement).value));
-});
-
-function loadPage(pageNumber: number) {
-  book.pageNumber = pageNumber;
-  (document.getElementById("pageNumber") as HTMLInputElement).value = book.pageNumber.toString();
-  let ref = book.spine[book.pageNumber];
-  fetch("/book/page/" + ref).then(async (resp) => {
+function loadPage(page: number) {
+  pageNumber = page;
+  pageNumberInput.value = String(pageNumber);
+  fetch(`/book/${bookId}/${pageNumber}`).then(async (resp) => {
     let text = await resp.text();
     let doc = XMLParse(text);
     document.getElementById("readingArea")!.replaceChildren(doc.body);
@@ -33,25 +27,22 @@ function loadPage(pageNumber: number) {
 }
 
 function prevPage() {
-  if (book.pageNumber <= 0) {
+  if (pageNumber <= 0) {
     return;
   }
-  loadPage(book.pageNumber - 1);
+  loadPage(pageNumber - 1);
 }
 
 function nextPage() {
-  if (book.pageNumber >= book.spine.length - 1) {
-    return;
-  }
-  loadPage(book.pageNumber + 1);
+  // TODO add max page number check
+  loadPage(pageNumber + 1);
 }
 
 function bookmarkPage() {
   let a = window.scrollY;
-  let page = book.pageNumber;
   let body = JSON.stringify({
     scroll: a,
-    page: page
+    page: pageNumber
   });
   console.log(body);
   fetch('/save', {
@@ -59,7 +50,6 @@ function bookmarkPage() {
     body: body,
     headers: { "Content-type": "application/json" }
   });
-
 }
 
 function loadBookmark() {
@@ -82,3 +72,4 @@ function XMLParse(xmlStr: string): Document {
   }
   return doc;
 }
+

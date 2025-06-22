@@ -1,7 +1,7 @@
 node_modules/
 .vscode/
 public/book/**
-src/settings/**
+settings
 saved_data.txt
 settings.txt
 built/
