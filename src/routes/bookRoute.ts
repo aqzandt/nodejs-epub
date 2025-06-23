@@ -6,10 +6,14 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * Handles requests for book content by ID and reference.
+ * reference attributes are updated to point to the static route.
+ */
 export function refRoute(req: any, res: any) {
-  console.log(
-    `Ref route called with ID ${req.params.id} and ref: ${req.params.ref}`
-  );
+  // console.log(
+  //   `Ref route called with ID ${req.params.id} and ref: ${req.params.ref}`
+  // );
   let book = bookService.getBookById(req.params.id);
 
   // TODO path verification
@@ -25,6 +29,7 @@ export function refRoute(req: any, res: any) {
       pathname.lastIndexOf(path.sep)
     )
     .replaceAll(path.sep, "/");
+
   for (let item of document.querySelectorAll("*")) {
     let href = item.getAttribute("href");
     if (href) {
@@ -55,10 +60,13 @@ export function refRoute(req: any, res: any) {
   res.send(newXHtml);
 }
 
+/**
+ * Handles static routes for book content.
+ */
 export function staticRoute(req: any, res: any) {
-  console.log(
-    `Static route called with ID ${req.params.id} and HREF: ${req.params.href}`
-  );
+  // console.log(
+  //   `Static route called with ID ${req.params.id} and HREF: ${req.params.href}`
+  // );
   let pathname = path.join(
     __dirname,
     "..",
@@ -69,4 +77,16 @@ export function staticRoute(req: any, res: any) {
     req.params.href
   );
   utils.returnFile(res, pathname);
+}
+
+/**
+ * Returns a list of book titles and IDs.
+ */
+export function getBookList(req: any, res: any) {
+  let books = bookService.getBookList();
+  let titleIds = books.map((book) => {
+    const titleId = { title: book.title, id: book.id };
+    return titleId;
+  });
+  res.json(titleIds);
 }

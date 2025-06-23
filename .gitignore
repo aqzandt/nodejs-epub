@@ -1,8 +1,6 @@
 node_modules/
 .vscode/
 public/book/**
-settings
-saved_data.txt
-settings.txt
 dist
+bookmarks
 **/*.js

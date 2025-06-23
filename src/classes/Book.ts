@@ -5,13 +5,14 @@ import path from "path";
 export class Book {
   id: string;
   folder: string;
+  title!: string;
   #items!: { id: string; href: string }[];
   #itemrefs!: string[];
 
   constructor(id: string, folderPath: string, opfPath: string) {
     this.id = id;
     this.folder = folderPath;
-    this.#parseItemsAndRefs(opfPath);
+    this.#parseOPF(opfPath);
   }
 
   /**
@@ -45,7 +46,7 @@ export class Book {
    * @param opfPath Path to the OPF file
    * Parses the OPF file to extract item and itemref information.
    */
-  #parseItemsAndRefs(opfPath: string): void {
+  #parseOPF(opfPath: string): void {
     let XML = fs.readFileSync(opfPath);
     let document = utils.XMLParse(XML);
 
@@ -67,6 +68,9 @@ export class Book {
       items.push(item);
     }
 
+    let title = document.querySelector("#title")?.innerHTML;
+
+    this.title = title || "Untitled Book";
     this.#items = items;
     this.#itemrefs = itemRefs;
   }

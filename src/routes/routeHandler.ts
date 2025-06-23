@@ -3,7 +3,6 @@ import * as htmlRoute from "./htmlRoute.ts";
 import * as bookRoute from "./bookRoute.ts";
 import * as uploadRoute from "./uploadRoute.ts";
 import * as bookmarkRoute from "./bookmarkRoute.ts";
-
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,12 +17,16 @@ export function routeHandler(app: any) {
     bookRoute.refRoute(req, res);
   });
 
+  app.get("/books", (req: any, res: any) => {
+    bookRoute.getBookList(req, res);
+  });
+
   // Bookmark
-  app.get("/save*", (req: any, res: any) => {
+  app.post("/save/:id", (req: any, res: any) => {
     bookmarkRoute.bookmarkRoute(req, res);
   });
 
-  app.get("/load*", (req: any, res: any) => {
+  app.get("/load/:id", (req: any, res: any) => {
     bookmarkRoute.getBookmark(req, res);
   });
 
@@ -32,7 +35,7 @@ export function routeHandler(app: any) {
     htmlRoute.index(res);
   });
 
-  app.get("/reader*", (_: any, res: any) => {
+  app.get("/reader/*", (_: any, res: any) => {
     htmlRoute.reader(res);
   });
 

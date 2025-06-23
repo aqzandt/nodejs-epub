@@ -6,6 +6,7 @@ const __dirname = path.dirname(__filename);
 
 export function bookmarkRoute(req: any, res: any) {
   let body = "";
+  let bookId = req.params.id;
 
   // Listen for data events - each chunk is received here
   req.on("data", (chunk: any) => {
@@ -16,11 +17,15 @@ export function bookmarkRoute(req: any, res: any) {
   // When the whole request is received, the end event is fired
   req.on("end", () => {
     try {
-      // Parse the accumulated string into a JSON object
-      const parsedBody = JSON.parse(body);
-      console.log("Saving Bookmark:", parsedBody);
+      // Ensure the bookmarks directory exists
+      const bookmarksDir = path.join(__dirname, "..", "..", "bookmarks");
+      if (!fs.existsSync(bookmarksDir)) {
+        fs.mkdirSync(bookmarksDir);
+      }
+
+      // Write the JSON data to a file named after the bookId
       fs.writeFileSync(
-        path.join(__dirname, "..", "settings", "settings.txt"),
+        path.join(__dirname, "..", "..", "bookmarks", `${bookId}.txt`),
         body
       );
       // Send a success response with a JSON payload
@@ -36,8 +41,9 @@ export function bookmarkRoute(req: any, res: any) {
 }
 
 export function getBookmark(req: any, res: any) {
+  let bookId = req.params.id;
   const json = fs.readFileSync(
-    path.join(__dirname, "..", "settings", "settings.txt")
+    path.join(__dirname, "..", "..", "bookmarks", `${bookId}.txt`)
   );
   res.writeHead(200, { "Content-Type": "application/json" });
   res.write(json);

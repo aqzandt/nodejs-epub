@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node16",
+    "module": "Node16",
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "lib": ["dom", "es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator"]
+  },
+  "include": ["public/**/*.ts"],
+  "exclude": ["./node_modules"]
+}

@@ -13,9 +13,20 @@ export function getBookById(id: string): Book {
   return books.find((book) => book.id === id)!;
 }
 
-function readBooks(): void {
+export function getBookList(): Book[] {
+  readBooks();
+  return books;
+}
+
+export function readBooks(): void {
+  books = [];
+
   // Read books from the public/book folder
   const bookFolder = path.join(__dirname, "..", "..", "public", "book");
+  if (!fs.existsSync(bookFolder)) {
+    fs.mkdirSync(bookFolder);
+  }
+  
   const dirs = fs
     .readdirSync(bookFolder, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())

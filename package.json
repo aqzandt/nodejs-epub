@@ -9,7 +9,7 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "dev": "concurrently \"npx tsc --watch\" \"npx nodemon",
+    "dev": "concurrently \"npx tsc --watch -p tsconfigdev.json\" \"npx nodemon",
     "copy:assets": "cpx \"public/html/**\" dist/public/html && cpx \"public/css/**\" dist/public/css",
     "build": "npx tsc && npm run copy:assets"
   },

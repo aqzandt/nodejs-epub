@@ -10,6 +10,12 @@ body {
   box-sizing: border-box;
 }
 
+#homeButton {
+  position: fixed;
+  top: 20px;
+  right: 260px;
+}
+
 #bookmarkLoadButton {
   position: fixed;
   top: 20px;

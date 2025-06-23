@@ -1,18 +1,22 @@
 let bookId = window.location.pathname.split("/").pop();
 let pageNumber = 0;
 
+const homeButton = document.getElementById("homeButton")!;
 const bookmarkSaveButton = document.getElementById("bookmarkSaveButton")!;
 const bookmarkLoadButton = document.getElementById("bookmarkLoadButton")!;
 const pageNumberInput = document.getElementById(
   "pageNumber"
 ) as HTMLInputElement;
+
+homeButton.addEventListener("click", () => {
+  window.location.href = "/";
+});
 bookmarkSaveButton.addEventListener("click", bookmarkPage);
 bookmarkLoadButton.addEventListener("click", loadBookmark);
 pageNumberInput.addEventListener("input", (e) => {
   pageNumber = Number((e.target as HTMLInputElement).value);
   loadPage(pageNumber);
 });
-
 document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowLeft") prevPage();
   if (e.code === "ArrowRight") nextPage();
@@ -41,13 +45,13 @@ function nextPage() {
 }
 
 function bookmarkPage() {
-  let a = window.scrollY;
+  let scroll = window.scrollY;
   let body = JSON.stringify({
-    scroll: a,
-    page: pageNumber,
+    "scroll": scroll,
+    "page": pageNumber,
   });
   console.log(body);
-  fetch("/save", {
+  fetch("/save/" + bookId, {
     method: "POST",
     body: body,
     headers: { "Content-type": "application/json" },
@@ -55,7 +59,7 @@ function bookmarkPage() {
 }
 
 function loadBookmark() {
-  fetch("/load").then(async (resp) => {
+  fetch("/load/" + bookId).then(async (resp) => {
     const res = await resp.json();
     console.log(res);
     let page = res.page;
@@ -74,3 +78,5 @@ function XMLParse(xmlStr: string): Document {
   }
   return doc;
 }
+
+loadPage(0);
