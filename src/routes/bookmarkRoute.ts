@@ -1,8 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { BOOKMARKS_DIR } from "../utils/paths.ts";
 
 export function bookmarkRoute(req: any, res: any) {
   let body = "";
@@ -18,14 +16,13 @@ export function bookmarkRoute(req: any, res: any) {
   req.on("end", () => {
     try {
       // Ensure the bookmarks directory exists
-      const bookmarksDir = path.join(__dirname, "..", "..", "bookmarks");
-      if (!fs.existsSync(bookmarksDir)) {
-        fs.mkdirSync(bookmarksDir);
+      if (!fs.existsSync(BOOKMARKS_DIR)) {
+        fs.mkdirSync(BOOKMARKS_DIR);
       }
 
       // Write the JSON data to a file named after the bookId
       fs.writeFileSync(
-        path.join(__dirname, "..", "..", "bookmarks", `${bookId}.txt`),
+        path.join(BOOKMARKS_DIR, `${bookId}.txt`),
         body
       );
       // Send a success response with a JSON payload
@@ -43,7 +40,7 @@ export function bookmarkRoute(req: any, res: any) {
 export function getBookmark(req: any, res: any) {
   let bookId = req.params.id;
   const json = fs.readFileSync(
-    path.join(__dirname, "..", "..", "bookmarks", `${bookId}.txt`)
+    path.join(BOOKMARKS_DIR, `${bookId}.txt`)
   );
   res.writeHead(200, { "Content-Type": "application/json" });
   res.write(json);

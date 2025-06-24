@@ -3,10 +3,22 @@ import * as utils from "../utils/utils.ts";
 import path from "path";
 
 export class Book {
+  /** Unique identifier for the book */
   id: string;
+
+  /** Absolute path to the folder containing the book's files */
   folder: string;
+
+  /** Title of the book */
   title!: string;
+
+  /** Path to the cover image */
+  coverPath!: string;
+
+  /** List of items (e.g., chapters, images) in the book */
   #items!: { id: string; href: string }[];
+
+  /** Ordered list of item references (reading order) */
   #itemrefs!: string[];
 
   constructor(id: string, folderPath: string, opfPath: string) {
@@ -67,6 +79,8 @@ export class Book {
       };
       items.push(item);
     }
+
+    this.coverPath = document.querySelector(`item[properties="cover-image"]`)?.getAttribute("href")!;
 
     let title = document.querySelector("#title")?.innerHTML;
 

@@ -1,7 +1,3 @@
-body {
-  background-color: #181a1b;
-}
-
 #readingArea {
   width: 100%;
   height: 100%;
@@ -32,8 +28,4 @@ body {
   position: fixed;
   top: 20px;
   left: 20px;
-}
-
-* :not(.normalStyle) {
-  color: #e8e6e3;
 }

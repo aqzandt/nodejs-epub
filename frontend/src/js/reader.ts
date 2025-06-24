@@ -1,3 +1,6 @@
+import '../css/style.css';
+import '../css/reader.css';
+
 let bookId = window.location.pathname.split("/").pop();
 let pageNumber = 0;
 

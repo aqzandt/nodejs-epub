@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Read EPub</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="module" src="/src/js/index.ts"></script>
+  </head>
+
+  <body>
+    <div class="content">
+      <form action="/upload" enctype="multipart/form-data" method="post">
+        <input
+          type="file"
+          class="normalStyle"
+          id="input"
+          name="file"
+          accept="application/epub+zip"
+        />
+        <button class="normalStyle">Upload</button>
+      </form>
+      <div id="list" class="grid-container"></div>
+    </div>
+  </body>
+</html>

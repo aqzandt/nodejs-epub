@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "./dist/src",
     "target": "es2022",
     "strict": true,
     "esModuleInterop": true,
@@ -9,8 +9,8 @@
     "module": "Node16",
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
-    "lib": ["dom", "es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator"]
+    "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator"]
   },
-  "include": ["**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["./node_modules"]
 }

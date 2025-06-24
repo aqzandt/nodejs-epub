@@ -9,9 +9,9 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "dev": "concurrently \"npx tsc --watch -p tsconfigdev.json\" \"npx nodemon",
-    "copy:assets": "cpx \"public/html/**\" dist/public/html && cpx \"public/css/**\" dist/public/css",
-    "build": "npx tsc && npm run copy:assets"
+    "dev": "concurrently \"nodemon\" \"cd frontend && npm run dev\"",
+    "build": "npx tsc && cd frontend && npm run build",
+    "build-dev": "cd frontend && npm run build-dev"
   },
   "keywords": [],
   "author": "",

@@ -1,16 +1,17 @@
 import path from "path";
-import * as htmlRoute from "./htmlRoute.ts";
 import * as bookRoute from "./bookRoute.ts";
 import * as uploadRoute from "./uploadRoute.ts";
 import * as bookmarkRoute from "./bookmarkRoute.ts";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { PUBLIC_DIR } from "../utils/paths.ts";
 
 export function routeHandler(app: any) {
   // Book Info
   app.get("/book/:id/static/:href(*)", (req: any, res: any) => {
     bookRoute.staticRoute(req, res);
+  });
+
+  app.get("/book/:id/cover", (req: any, res: any) => {
+    bookRoute.cover(req, res);
   });
 
   app.get("/book/:id/:ref", (req: any, res: any) => {
@@ -32,15 +33,15 @@ export function routeHandler(app: any) {
 
   // HTML pages
   app.get("/", (_: any, res: any) => {
-    htmlRoute.index(res);
+    res.sendFile(path.join(PUBLIC_DIR, "index.html"));
   });
 
   app.get("/reader/*", (_: any, res: any) => {
-    htmlRoute.reader(res);
+    res.sendFile(path.join(PUBLIC_DIR, "reader.html"));
   });
 
   app.get("/favicon.ico", (_: any, res: any) => {
-    htmlRoute.favicon(res);
+    res.sendFile(path.join(PUBLIC_DIR, "favicon.ico"));
   });
 
   // Upload

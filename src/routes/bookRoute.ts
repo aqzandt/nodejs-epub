@@ -2,9 +2,7 @@ import path from "path";
 import fs from "fs";
 import * as utils from "../utils/utils.ts";
 import * as bookService from "../services/bookService.ts";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { UPLOADS_DIR } from "../utils/paths.ts";
 
 /**
  * Handles requests for book content by ID and reference.
@@ -60,6 +58,11 @@ export function refRoute(req: any, res: any) {
   res.send(newXHtml);
 }
 
+export function cover(req: any, res: any) {
+  let book = bookService.getBookById(req.params.id);
+  res.sendFile(path.join(book.folder, book.coverPath));
+}
+
 /**
  * Handles static routes for book content.
  */
@@ -68,15 +71,10 @@ export function staticRoute(req: any, res: any) {
   //   `Static route called with ID ${req.params.id} and HREF: ${req.params.href}`
   // );
   let pathname = path.join(
-    __dirname,
-    "..",
-    "..",
-    "public",
-    "book",
     req.params.id,
     req.params.href
   );
-  utils.returnFile(res, pathname);
+  res.sendFile(path.join(UPLOADS_DIR, pathname));
 }
 
 /**

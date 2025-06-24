@@ -2,9 +2,7 @@ import formidable from "formidable";
 import fs from "fs";
 import path from "path";
 import * as utils from "../utils/utils.ts";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { UPLOADS_DIR } from "../utils/paths.ts";
 
 export function uploadBook(req: any, res: any) {
   // Initialize formidable
@@ -22,14 +20,13 @@ export function uploadBook(req: any, res: any) {
     let tempFilePath = uploadedFile.filepath;
     let originalFilename = uploadedFile.originalFilename!;
 
-    let bookPath = path.join(__dirname, "..", "..", "public", "book");
-    if (!fs.existsSync(bookPath)) {
-      fs.mkdirSync(bookPath);
+    if (!fs.existsSync(UPLOADS_DIR)) {
+      fs.mkdirSync(UPLOADS_DIR);
     }
 
     // Target file path
     let id = crypto.randomUUID();
-    let folderPath = path.join(__dirname, "..", "..", "public", "book", id);
+    let folderPath = path.join(UPLOADS_DIR, id);
     let zipPath = path.join(folderPath, originalFilename);
 
     // Create upload directory

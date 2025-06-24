@@ -2,9 +2,7 @@ import fs from "fs";
 import path from "path";
 import * as utils from "../utils/utils.ts";
 import { Book } from "../classes/Book.ts";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { UPLOADS_DIR } from "../utils/paths.ts";
 
 let books: Book[] = [];
 
@@ -22,18 +20,17 @@ export function readBooks(): void {
   books = [];
 
   // Read books from the public/book folder
-  const bookFolder = path.join(__dirname, "..", "..", "public", "book");
-  if (!fs.existsSync(bookFolder)) {
-    fs.mkdirSync(bookFolder);
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR);
   }
   
   const dirs = fs
-    .readdirSync(bookFolder, { withFileTypes: true })
+    .readdirSync(UPLOADS_DIR, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name);
 
   for (const dir of dirs) {
-    const bookPath = path.join(bookFolder, dir);
+    const bookPath = path.join(UPLOADS_DIR, dir);
 
     let opf = utils.getOpfPathFromBookFolderPath(bookPath);
     let content = utils.getContentFolderPathFromBookFolderPath(bookPath);
