@@ -78,10 +78,11 @@ export function staticRoute(req: any, res: any) {
 }
 
 /**
- * Returns a list of book titles and IDs.
+ * Returns a list of book titles and IDs in alphabetical order.
  */
 export function getBookList(req: any, res: any) {
   let books = bookService.getBookList();
+  books.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
   let titleIds = books.map((book) => {
     const titleId = { title: book.title, id: book.id };
     return titleId;
