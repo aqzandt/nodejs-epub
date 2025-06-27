@@ -80,9 +80,16 @@ export class Book {
       items.push(item);
     }
 
-    this.coverPath = document.querySelector(`item[properties="cover-image"]`)?.getAttribute("href")!;
+    this.coverPath = document
+      .querySelector(`item[properties="cover-image"]`)
+      ?.getAttribute("href")!;
 
-    let title = document.querySelector("#title")?.innerHTML;
+    // TODO may need more solid implementation for title
+    const DC_NS = "http://purl.org/dc/elements/1.1/";
+    
+    const titleElement = document.getElementsByTagNameNS(DC_NS, "title")[0];
+    const title = titleElement?.textContent || "Untitled Book";
+    console.log("Book title:", title);
 
     this.title = title || "Untitled Book";
     this.#items = items;
