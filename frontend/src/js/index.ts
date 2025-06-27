@@ -15,9 +15,9 @@ searchInput.addEventListener("input", () => {
   }, 300); // 300ms delay
 });
 
-// Book upload button opens file input dialog
+// Upload button opens file input dialog
 uploadBtn.addEventListener("click", () => {
-  document.getElementById("input")?.click();
+  fileInput.click();
 });
 
 // Send book once book selected
