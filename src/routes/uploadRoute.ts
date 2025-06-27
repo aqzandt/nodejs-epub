@@ -2,6 +2,7 @@ import formidable from "formidable";
 import fs from "fs";
 import path from "path";
 import * as utils from "../utils/utils.ts";
+import * as bookService from "../services/bookService.ts";
 import { UPLOADS_DIR } from "../utils/paths.ts";
 
 export function uploadBook(req: any, res: any) {
@@ -40,7 +41,9 @@ export function uploadBook(req: any, res: any) {
         res.end();
         return;
       }
+
       utils.unzip(zipPath, folderPath);
+      bookService.readBookFromID(id);
 
       //Redirect to Reader
       res.statusCode = 302;
