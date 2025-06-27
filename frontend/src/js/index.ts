@@ -56,24 +56,31 @@ function fetchAndShowBooks(query: string = ""): void {
     const books = await resp.json();
     console.log("Books fetched:", books);
     const newList = document.createElement("div");
+
+    // Copy all attributes from list to newList
+    for (const attr of list.attributes) {
+      newList.setAttribute(attr.name, attr.value);
+    }
     newList.innerHTML = books.length === 0 ? "<p>No books found</p>" : "";
 
     const promises: any = [];
     for (const book of books) {
-      const promise = fetch("/book/" + book.id + "/cover").then(async (resp) => {
-        if (resp.ok) {
-          const blob = await resp.blob();
-          const img = document.createElement("img");
-          img.src = URL.createObjectURL(blob);
-          img.alt = book.title + " cover";
-          const card = createBookCard(book, img);
-          newList.appendChild(card);
+      const promise = fetch("/book/" + book.id + "/cover").then(
+        async (resp) => {
+          if (resp.ok) {
+            const blob = await resp.blob();
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(blob);
+            img.alt = book.title + " cover";
+            const card = createBookCard(book, img);
+            newList.appendChild(card);
+          }
         }
-      });
+      );
       promises.push(promise);
     }
     await Promise.all(promises);
-    list.innerHTML = newList.innerHTML;
+    list.replaceWith(newList);
   });
 }
 

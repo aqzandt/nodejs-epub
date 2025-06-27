@@ -4,22 +4,22 @@ import '../css/reader.css';
 let bookId = window.location.pathname.split("/").pop();
 let pageNumber = 0;
 
-const homeButton = document.getElementById("homeButton")!;
-const bookmarkSaveButton = document.getElementById("bookmarkSaveButton")!;
-const bookmarkLoadButton = document.getElementById("bookmarkLoadButton")!;
-const pageNumberInput = document.getElementById(
-  "pageNumber"
-) as HTMLInputElement;
+const homeButton = document.getElementById("homeButton") as HTMLButtonElement;
+const bookmarkSaveButton = document.getElementById("bookmarkSaveButton") as HTMLButtonElement;
+const bookmarkLoadButton = document.getElementById("bookmarkLoadButton") as HTMLButtonElement;
+const pageNumberInput = document.getElementById("pageNumber") as HTMLInputElement;
 
 homeButton.addEventListener("click", () => {
   window.location.href = "/";
 });
+
 bookmarkSaveButton.addEventListener("click", bookmarkPage);
 bookmarkLoadButton.addEventListener("click", loadBookmark);
 pageNumberInput.addEventListener("input", (e) => {
   pageNumber = Number((e.target as HTMLInputElement).value);
   loadPage(pageNumber);
 });
+
 document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowLeft") prevPage();
   if (e.code === "ArrowRight") nextPage();
