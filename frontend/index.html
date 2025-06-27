@@ -10,17 +10,27 @@
   </head>
 
   <body>
+    <header class="main-header">
+      <div class="header-inner">
+        <button class="header-btn" id="homeBtn">Home</button>
+        <form id="search-form" class="header-search" onsubmit="return false;">
+          <input id="search-input" type="text" placeholder="Search..."/>
+        </form>        
+        <form id="file-form" enctype="multipart/form-data" method="post">
+          <input
+            type="file"
+            class="normalStyle"
+            id="file-input"
+            name="file"
+            accept="application/epub+zip"
+            style="display: none;"
+          />
+          <button action="/upload" class="header-btn" id="uploadBtn" type="button">Upload</button>
+        </form>
+      </div>
+    </header>
+
     <div class="content">
-      <form action="/upload" enctype="multipart/form-data" method="post">
-        <input
-          type="file"
-          class="normalStyle"
-          id="input"
-          name="file"
-          accept="application/epub+zip"
-        />
-        <button class="normalStyle">Upload</button>
-      </form>
       <div id="list" class="grid-container"></div>
     </div>
   </body>

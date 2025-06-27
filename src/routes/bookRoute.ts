@@ -3,6 +3,7 @@ import fs from "fs";
 import * as utils from "../utils/utils.ts";
 import * as bookService from "../services/bookService.ts";
 import { UPLOADS_DIR } from "../utils/paths.ts";
+import { Request, Response } from "express";
 
 /**
  * Handles requests for book content by ID and reference.
@@ -70,22 +71,36 @@ export function staticRoute(req: any, res: any) {
   // console.log(
   //   `Static route called with ID ${req.params.id} and HREF: ${req.params.href}`
   // );
-  let pathname = path.join(
-    req.params.id,
-    req.params.href
-  );
+  let pathname = path.join(req.params.id, req.params.href);
   res.sendFile(path.join(UPLOADS_DIR, pathname));
 }
 
 /**
- * Returns a list of book titles and IDs in alphabetical order.
+ * Returns a list of book titles and IDs in alphabetical order with an optional search query.
  */
-export function getBookList(req: any, res: any) {
+export function getBookList(req: Request, res: Response) {
+  let query = req.query.query as string;
+  if (query) {
+    query = query.toLowerCase();
+  }
+
   let books = bookService.getBookList();
-  books.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+
+  if (query) {
+    books = books.filter((book) => {
+      let title = book.title.toLowerCase();
+      return title.includes(query);
+    });
+  }
+
+  books.sort((a, b) =>
+    a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+  );
+
   let titleIds = books.map((book) => {
     const titleId = { title: book.title, id: book.id };
     return titleId;
   });
+
   res.json(titleIds);
 }
