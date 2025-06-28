@@ -55,13 +55,8 @@ function fetchAndShowBooks(query: string = ""): void {
   fetch(`/books?query=${encodeURIComponent(query)}`).then(async (resp) => {
     const books = await resp.json();
     console.log("Books fetched:", books);
-    const newList = document.createElement("div");
 
-    // Copy all attributes from list to newList
-    for (const attr of list.attributes) {
-      newList.setAttribute(attr.name, attr.value);
-    }
-    newList.innerHTML = books.length === 0 ? "<p>No books found</p>" : "";
+    list.innerHTML = books.length === 0 ? "<p>No books found</p>" : "";
 
     const promises: any = [];
     for (const book of books) {
@@ -73,14 +68,12 @@ function fetchAndShowBooks(query: string = ""): void {
             img.src = URL.createObjectURL(blob);
             img.alt = book.title + " cover";
             const card = createBookCard(book, img);
-            newList.appendChild(card);
+            list.appendChild(card);
           }
         }
       );
       promises.push(promise);
     }
-    await Promise.all(promises);
-    list.replaceWith(newList);
   });
 }
 
