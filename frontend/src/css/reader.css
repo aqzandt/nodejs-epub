@@ -24,3 +24,8 @@
   box-shadow: 0 0 0 2px #4f8cff44;
   outline: none;
 }
+
+#buttons {
+  display: inline;
+  gap: 0.5rem; /* Space between buttons */
+}
