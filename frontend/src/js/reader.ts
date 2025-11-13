@@ -8,6 +8,7 @@ const homeButton = document.getElementById("homeButton") as HTMLButtonElement;
 const bookmarkSaveButton = document.getElementById("bookmarkSaveButton") as HTMLButtonElement;
 const bookmarkLoadButton = document.getElementById("bookmarkLoadButton") as HTMLButtonElement;
 const pageNumberInput = document.getElementById("pageNumber") as HTMLInputElement;
+const hideButton = document.getElementById("hideButton") as HTMLButtonElement;
 
 homeButton.addEventListener("click", () => {
   window.location.href = "/";
@@ -15,6 +16,7 @@ homeButton.addEventListener("click", () => {
 
 bookmarkSaveButton.addEventListener("click", bookmarkPage);
 bookmarkLoadButton.addEventListener("click", loadBookmark);
+hideButton.addEventListener("click", hideHeader);
 pageNumberInput.addEventListener("input", (e) => {
   pageNumber = Number((e.target as HTMLInputElement).value);
   loadPage(pageNumber);
@@ -70,6 +72,20 @@ function loadBookmark() {
     loadPage(page);
     window.scrollTo(0, scroll);
   });
+}
+
+function hideHeader() {
+  const header = document.querySelector("header") as HTMLElement;
+  if (header.style.display === "none") {
+    header.style.display = "block";
+    hideButton.textContent = "v";
+    hideButton.style.marginTop = "-35px";
+    hideButton.style.top = "60px";
+  } else {
+    header.style.display = "none";
+    hideButton.textContent = "^";
+    hideButton.style.top = "-10px";
+  }
 }
 
 function XMLParse(xmlStr: string): Document {

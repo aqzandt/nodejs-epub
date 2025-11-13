@@ -29,3 +29,22 @@
   display: inline;
   gap: 0.5rem; /* Space between buttons */
 }
+
+#pageNumber {
+  position:relative;
+  left: 4.7%;
+}
+
+#hideButton {
+  position: sticky;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: fit-content;
+  margin-inline: auto;
+  font-size: 0.8em;
+  padding: 0 2em 0.3em 2em;
+  z-index: 99;
+  top: 60px;
+  margin-top: -35px;
+}
