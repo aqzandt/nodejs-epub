@@ -3,6 +3,7 @@ import '../css/reader.css';
 
 let bookId = window.location.pathname.split("/").pop();
 let pageNumber = 0;
+let totalPages = Number.POSITIVE_INFINITY;
 
 const homeButton = document.getElementById("homeButton") as HTMLButtonElement;
 const bookmarkSaveButton = document.getElementById("bookmarkSaveButton") as HTMLButtonElement;
@@ -18,8 +19,9 @@ bookmarkSaveButton.addEventListener("click", bookmarkPage);
 bookmarkLoadButton.addEventListener("click", loadBookmark);
 hideButton.addEventListener("click", hideHeader);
 pageNumberInput.addEventListener("input", (e) => {
-  pageNumber = Number((e.target as HTMLInputElement).value);
-  loadPage(pageNumber);
+  const val = Number((e.target as HTMLInputElement).value);
+  if (!Number.isFinite(val)) return;
+  loadPage(val);
 });
 
 document.addEventListener("keydown", (e) => {
@@ -27,14 +29,14 @@ document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowRight") nextPage();
 });
 
-function loadPage(page: number) {
-  pageNumber = page;
+async function loadPage(page: number) {
+  const maxIndex = Number.isFinite(totalPages) ? totalPages - 1 : Number.POSITIVE_INFINITY;
+  pageNumber = Math.max(0, Math.min(page, maxIndex));
   pageNumberInput.value = String(pageNumber);
-  fetch(`/book/${bookId}/${pageNumber}`).then(async (resp) => {
-    let text = await resp.text();
-    let doc = XMLParse(text);
-    document.getElementById("readingArea")!.replaceChildren(doc.body);
-  });
+  const resp = await fetch(`/book/${bookId}/${pageNumber}`);
+  const text = await resp.text();
+  const doc = XMLParse(text);
+  document.getElementById("readingArea")!.replaceChildren(doc.body);
 }
 
 function prevPage() {
@@ -45,33 +47,57 @@ function prevPage() {
 }
 
 function nextPage() {
-  // TODO add max page number check
+  if (pageNumber + 1 >= totalPages) {
+    return;
+  }
   loadPage(pageNumber + 1);
 }
 
-function bookmarkPage() {
-  let scroll = window.scrollY;
-  let body = JSON.stringify({
-    "scroll": scroll,
-    "page": pageNumber,
+async function bookmarkPage() {
+  const scroll = window.scrollY;
+  const body = JSON.stringify({
+    scroll,
+    page: pageNumber,
   });
-  console.log(body);
-  fetch("/save/" + bookId, {
-    method: "POST",
-    body: body,
-    headers: { "Content-type": "application/json" },
-  });
+  try {
+    const resp = await fetch("/save/" + bookId, {
+      method: "POST",
+      body,
+      headers: { "Content-type": "application/json" },
+    });
+    if (resp.ok) {
+      showToast("Bookmarked!");
+    } else {
+      showToast("Failed to bookmark");
+    }
+  } catch (_) {
+    showToast("Failed to bookmark");
+  }
 }
 
-function loadBookmark() {
-  fetch("/load/" + bookId).then(async (resp) => {
-    const res = await resp.json();
-    console.log(res);
-    let page = res.page;
-    let scroll = res.scroll;
-    loadPage(page);
-    window.scrollTo(0, scroll);
-  });
+async function loadBookmark() {
+  const resp = await fetch("/load/" + bookId);
+  const res = await resp.json();
+  console.log(res);
+  const page = res.page;
+  const scroll = res.scroll;
+  await loadPage(page);
+  window.scrollTo(0, scroll);
+  showToast("Loaded bookmark!");
+}
+
+async function loadBookMeta() {
+  try {
+    const resp = await fetch(`/book/${bookId}/meta`);
+    if (!resp.ok) return;
+    const meta = await resp.json();
+    const pages = Number(meta?.totalPages);
+    if (Number.isFinite(pages) && pages > 0) {
+      totalPages = pages;
+    }
+  } catch (_err) {
+    // Keep fallback infinity when meta cannot be loaded
+  }
 }
 
 function hideHeader() {
@@ -98,4 +124,24 @@ function XMLParse(xmlStr: string): Document {
   return doc;
 }
 
-loadPage(0);
+function showToast(message: string) {
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = message;
+  document.body.appendChild(el);
+  // Trigger CSS animation on next frame
+  requestAnimationFrame(() => {
+    el.classList.add("show");
+  });
+  const ttl = 1800; // total time before removal
+  setTimeout(() => {
+    el.remove();
+  }, ttl + 250);
+}
+
+async function init() {
+  await loadBookMeta();
+  loadPage(0);
+}
+
+init();

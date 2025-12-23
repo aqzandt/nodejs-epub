@@ -14,11 +14,25 @@ export function refRoute(req: any, res: any) {
   //   `Ref route called with ID ${req.params.id} and ref: ${req.params.ref}`
   // );
   let book = bookService.getBookById(req.params.id);
+  if (!book) {
+    res.status(404).send("Book not found");
+    return;
+  }
+
+  const ref = Number(req.params.ref);
+  if (!Number.isInteger(ref)) {
+    res.status(400).send("Invalid page reference");
+    return;
+  }
 
   // TODO path verification
 
   // Change all hrefs and xlink:hrefs to point to the static route
-  let pathname = book.getItem(req.params.ref)!;
+  let pathname = book.getItem(ref);
+  if (!pathname) {
+    res.status(404).send("Page not found");
+    return;
+  }
   let xhtml = fs.readFileSync(pathname);
   let document = utils.XMLParse(xhtml);
 
@@ -57,6 +71,20 @@ export function refRoute(req: any, res: any) {
 
   let newXHtml = utils.documentToXMLString(document);
   res.send(newXHtml);
+}
+
+export function getBookMeta(req: Request, res: Response) {
+  const book = bookService.getBookById(req.params.id);
+  if (!book) {
+    res.status(404).send("Book not found");
+    return;
+  }
+
+  res.json({
+    id: book.id,
+    title: book.title,
+    totalPages: book.pageCount,
+  });
 }
 
 export function cover(req: any, res: any) {

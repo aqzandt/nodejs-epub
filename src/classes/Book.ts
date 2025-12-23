@@ -44,6 +44,13 @@ export class Book {
     return pathname;
   }
 
+  /**
+   * Number of readable items (pages/chapters) in the book
+   */
+  get pageCount(): number {
+    return this.#itemrefs.length;
+  }
+
   log() {
     return {
       id: this.id,

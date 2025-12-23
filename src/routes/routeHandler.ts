@@ -14,6 +14,10 @@ export function routeHandler(app: any) {
     bookRoute.cover(req, res);
   });
 
+  app.get("/book/:id/meta", (req: any, res: any) => {
+    bookRoute.getBookMeta(req, res);
+  });
+
   app.get("/book/:id/:ref", (req: any, res: any) => {
     bookRoute.refRoute(req, res);
   });
