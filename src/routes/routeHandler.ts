@@ -11,11 +11,17 @@ export function routeHandler(app: any) {
   });
 
   app.get("/book/:id/cover", (req: any, res: any) => {
+    console.log("Received request to get cover for book with ID: " + req.params.id);
+
     bookRoute.cover(req, res);
   });
 
   app.get("/book/:id/meta", (req: any, res: any) => {
     bookRoute.getBookMeta(req, res);
+  });
+
+  app.get("/book/:id/analyze", (req: any, res: any) => {
+    bookRoute.analyzeKanji(req, res);
   });
 
   app.get("/book/:id/:ref", (req: any, res: any) => {

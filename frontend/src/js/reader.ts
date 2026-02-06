@@ -1,5 +1,6 @@
 import '../css/style.css';
 import '../css/reader.css';
+import './reader-analyze';
 
 let bookId = window.location.pathname.split("/").pop();
 let pageNumber = 0;
@@ -12,7 +13,7 @@ const pageNumberInput = document.getElementById("pageNumber") as HTMLInputElemen
 const hideButton = document.getElementById("hideButton") as HTMLButtonElement;
 
 homeButton.addEventListener("click", () => {
-  window.location.href = "/";
+    window.location.href = "/";
 });
 
 bookmarkSaveButton.addEventListener("click", bookmarkPage);

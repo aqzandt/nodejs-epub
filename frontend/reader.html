@@ -13,10 +13,34 @@
         <div id="buttons">
           <button class="header-btn" id="bookmarkSaveButton">Bookmark</button>
           <button class="header-btn" id="bookmarkLoadButton">Load</button>
+          <button class="header-btn" id="analyzeButton">Analyze Kanji</button>
         </div>
       </div>
     </header>
     <button class="header-btn" id="hideButton">v</button>
     <div id="readingArea" lang="ja-JP"></div>
+    
+    <!-- Kanji Analysis Modal -->
+    <div id="kanjiModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Kanji Frequency Analysis</h2>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <table id="kanjiTable" class="kanji-table">
+            <thead>
+              <tr>
+                <th>Kanji</th>
+                <th>Frequency</th>
+              </tr>
+            </thead>
+            <tbody id="kanjiTableBody">
+              <!-- Kanji rows will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

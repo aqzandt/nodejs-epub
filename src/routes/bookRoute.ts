@@ -132,3 +132,34 @@ export function getBookList(req: Request, res: Response) {
 
   res.json(titleIds);
 }
+
+export function analyzeKanji(req: Request, res: Response) {
+  let book = bookService.getBookById(req.params.id)
+  if (!book) {
+    res.status(404).send("Book not found");
+    return;
+  }
+
+  let count = book.pageCount;
+  const aggregate: Map<string, number> = new Map();
+
+  for (let i = 0; i < count; i++) {
+    let path = book.getItem(i)!;
+    let xhtml = fs.readFileSync(path);
+    let document = utils.XMLParse(xhtml);
+    let text = document.body.textContent;
+
+    const matches = text.match(/\p{Script=Han}+/gu);
+    const result = matches ? matches.join("") : "";
+
+    for (const char of result) {
+      if (aggregate.has(char)) {
+        aggregate.set(char, aggregate.get(char)! + 1);
+      } else {
+        aggregate.set(char, 1);
+      }
+    }
+  }
+  const array = Array.from(aggregate.entries()).sort((a, b) => b[1] - a[1]);
+  res.json(array);
+}
